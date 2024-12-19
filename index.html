@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Àudio i Vídeo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s;
+        }
+
+        .vinilPlayer {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+
+        .vinil {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            animation: spin 5s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .buttons img {
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        progress {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="player">
+        <source src="media/techbg.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="vinilPlayer">
+        <div class="vinil">
+           <img src="media/svg/vinilo.svg" alt="vinilo" width="200" height="200" />
+        </div>
+    </div>
+
+    <div class="buttons">
+        <div id="playPauseContainer">
+            <img id="playButton" src="media/svg/play.svg" alt="play_button" width="50" height="50" onclick="engegarAudio();">
+            <img id="pauseButton" class="hidden" src="media/svg/pause.svg" alt="pause_button" width="50" height="50" onclick="aturarAudio();">
+        </div>
+        <progress id="progress" value="0" max="100"></progress>
+        <input type="range" id="volum" min="0" max="1" step="0.01" value="1" oninput="audio.volume = this.value;">
+        <button id="darkModeButton" onclick="toggleDarkMode()">Modo Oscuro</button>
+    </div>
+
+    <script>
+        let audio = document.getElementById('player');
+        let playButton = document.getElementById('playButton');
+        let pauseButton = document.getElementById('pauseButton');
+        let darkModeButton = document.getElementById('darkModeButton');
+
+        function engegarAudio() {
+            audio.play();
+            document.querySelector(".vinil").style.animationPlayState = "running";
+            playButton.classList.add('hidden');
+            pauseButton.classList.remove('hidden');
+        }
+
+        function aturarAudio() {
+            audio.pause();
+            document.querySelector(".vinil").style.animationPlayState = "paused";
+            playButton.classList.remove('hidden');
+            pauseButton.classList.add('hidden');
+        }
+
+        audio.addEventListener('timeupdate', function() {
+            let progress = document.getElementById('progress');
+            progress.value = (audio.currentTime / audio.duration) * 100;
+        });
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeButton.textContent = "Modo Claro";
+            } else {
+                darkModeButton.textContent = "Modo Oscuro";
+            }
+        }
+    </script>
+</body>
+</html>
